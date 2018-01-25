@@ -1,0 +1,160 @@
+use master
+go
+if exists(select * from sys.databases where name = 'QLDaiLyNuoc')
+	drop database QLDaiLyNuoc
+go
+
+create database QLDaiLyNuoc
+go
+use QLDaiLyNuoc
+go
+CREATE TABLE DaiLy
+(
+	MaDL int Identity(1,1) NOT NULL PRIMARY KEY, 
+    TenDL NVARCHAR(50), 
+    DiaChi NVARCHAR(200), 
+    SDT NVARCHAR(15), 
+    CongNo DECIMAL(8,0), 
+    NgayDK DATETIME,
+	TrangThai int
+)
+go
+CREATE TABLE LoaiSP
+(
+	MaLoai int Identity(1,1) NOT NULL PRIMARY KEY, 
+    TenLoai NVARCHAR(50)
+)
+go
+CREATE TABLE SanPham
+(
+	MaSP int Identity(1,1) NOT NULL PRIMARY KEY, 
+    TenSP NVARCHAR(50), 
+    DonGia DECIMAL(8,0),
+	HinhAnh VARCHAR(300),
+    MaLoai int,
+    CONSTRAINT FK_SanPham_Loai FOREIGN KEY (MaLoai) REFERENCES LoaiSP(MaLoai)
+)
+go
+CREATE TABLE PhieuXuatHang
+(
+	MaPX int Identity(1,1) NOT NULL PRIMARY KEY, 
+    NgayXuat DATETIME, 
+    ThanhTien DECIMAL(8,0),
+    MaNV int NOT NULL,
+	MaDL int NOT NULL,
+TrangThai int,
+    CONSTRAINT madl FOREIGN KEY (MaDL) REFERENCES DaiLy(MaDL) 
+)
+go
+CREATE TABLE CTPhieuXuat
+(
+	MaPX int NOT NULL , 
+    MaSP int NOT NULL, 
+    SoLuong INT, 
+	DonGia DECIMAL(8,0),
+    TongTien DECIMAL(8,0),
+	CONSTRAINT PK_CTPhieuXuat PRIMARY KEY (MaPX,MaSP),
+    CONSTRAINT FK_CTPhieuXuat_PX FOREIGN KEY (MaPX) REFERENCES PhieuXuatHang(MaPX), 
+    CONSTRAINT FK_CTPhieuXuat_SP FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
+)
+go
+CREATE TABLE PhieuThuTien
+(
+	MaPT int Identity(1,1) NOT NULL PRIMARY KEY, 
+    SoTien DECIMAL(8,0),
+    NgayThu DATETIME,
+	MaNV int NOT NULL, 
+    MaDL int NOT NULL,  
+    CONSTRAINT FK_PhieuThu_DL FOREIGN KEY (MaDL) REFERENCES DaiLy(MaDL) 
+)
+go
+CREATE TABLE NhomNhanVien
+(
+	MaNhom  int Identity(1,1) NOT NULL PRIMARY KEY, 
+    TenNhom NVARCHAR(10) NULL
+)
+go
+CREATE TABLE NhanVien
+(
+	MaNV int Identity(1,1) NOT NULL PRIMARY KEY, 
+    TenNV NVARCHAR(20),
+	DiaChi NVARCHAR(200), 
+    SDT NVARCHAR(15),
+	Email NVARCHAR(100)  ,
+	HinhAnh VARCHAR(300),
+	MatKhau VARCHAR(20),
+    MaNhom int NOT NULL, 
+    CONSTRAINT FK_NV_NhomNhanVien FOREIGN KEY (MaNhom) REFERENCES NhomNhanVien(MaNhom)
+)
+go
+CREATE TABLE ThamSo
+(
+	MaTS int Identity(1,1) NOT NULL PRIMARY KEY,
+	TenTS NVARCHAR(50),
+	GiaTri INT,
+	ThoiGianHieuLuc DATETIME,
+	GhiChu nvarchar(200)
+)
+go
+CREATE TABLE BaoCaoDoanhThu
+(
+	MaBCDT int Identity(1,1) NOT NULL PRIMARY KEY,
+	NgayBC DATETIME,
+	TongNo DECIMAL(8,0),
+	DaThanhToan DECIMAL(8,0),
+	GhiChu nvarchar(200),
+)
+go
+CREATE TABLE BaoCaoSanPham
+(
+	MaBCSP int Identity(1,1) NOT NULL PRIMARY KEY,
+	NgayBC DATETIME,
+	SoLuongSP int,
+	GhiChu nvarchar(200),
+)
+
+INSERT INTO NhomNhanVien ( TenNhom) VALUES
+(N'Quản lý'),
+(N'Nhân viên');
+
+INSERT INTO DaiLy (TenDL, DiaChi, SDT, CongNo, NgayDK, TrangThai) VALUES
+(N'Cửa hàng Phong Thịnh', N'250 Sư Vạn Hạnh, P.12, Q.10, TP.HCM', '0976851481', 0, '2017-10-31', 1),
+(N'Cửa hàng BabyShop', N'250 Sư Vạn Hạnh, P.12, Q.10, TP.HCM', '0976851481', 0, '2017-10-31', 0),
+(N'Đại lý Petro', N'250 Sư Vạn Hạnh, P.12, Q.10, TP.HCM', '0976851481', 0, '2017-10-31', 1),
+(N'Cửa hàng Xuân Phúc', N'250 Sư Vạn Hạnh, P.12, Q.10, TP.HCM', '0976851481', 0, '2017-10-31', 0),
+(N'Bmart', N'250 Sư Vạn Hạnh, P.12, Q.10, TP.HCM', '0976851481', 0, '2017-10-31', 1),
+(N'Family Mart', N'250 Sư Vạn Hạnh, P.12, Q.10, TP.HCM', '0976851481', 0, '2017-10-31', 1),
+(N'Cửa hàng Thành Công', N'250 Sư Vạn Hạnh, P.12, Q.10, TP.HCM', '0976851481', 0, '2017-10-31', 1),
+(N'Tạp hoá Thư', N'250 Sư Vạn Hạnh, P.12, Q.10, TP.HCM', '0976851481', 0, '2017-10-31', 1),
+(N'Cửa hàng Tùng', N'250 Sư Vạn Hạnh, P.12, Q.10, TP.HCM', '0976851481', 0, '2017-10-31', 1),
+(N'Tạp hoá Minh Phúc', N'250 Sư Vạn Hạnh, P.12, Q.10, TP.HCM', '0976851481', 0, '2017-10-31', 1);
+
+INSERT INTO LoaiSP( TenLoai) VALUES
+( N'Nước khoáng LAVIE'),
+(N'Nước khoáng EVIAN'),
+( N'Nước suối SAPUWA'),
+(N'Nước khoáng VĨNH HẢO'),
+( N'Nước suối AQUAFINA'),
+(N'Nước suối ION LIFE'),
+(N'Nước suối DASANI'),
+(N'Nước suối SANNA');
+
+INSERT INTO NhanVien ( TenNV, DiaChi, SDT, Email, HinhAnh, MatKhau, MaNhom) VALUES
+(N'Hồ Minh Tùng', N'155b Sư Vạn Hạnh(nd), P.12, Q.10, TP.HCM', '0976851481', 'test@gmail.com', 'imagesql.jpg', '1', '1'),
+(N'Hồ Minh Tài', N'155b Sư Vạn Hạnh(nd), P.12, Q.10, TP.HCM', '0976851481', 'test6@gmail.com', 'images (2).jpg', '2', '2'),
+( N'Hồ Minh Thông', N'155b Sư Vạn Hạnh(nd), P.12, Q.10, TP.HCM', '0976851481', 'test2@gmail.com', 'images (1).jpg', '3', '2'),
+(N'Hồ Minh Lâm', N'155b Sư Vạn Hạnh(nd), P.12, Q.10, TP.HCM', '0976851481', 'test3@gmail.com', 'images (2).jpg', '4', '2'),
+(N'Hồ Minh Lộc', N'155b Sư Vạn Hạnh(nd), P.12, Q.10, TP.HCM', '0976851481', 'test4@gmail.com', 'images (2).jpg', '5', '2'),
+(N'Hồ Minh Phúc', N'155b Sư Vạn Hạnh(nd), P.12, Q.10, TP.HCM', '0976851481', 'test5@gmail.com', 'imagesql.jpg', '6', '2');
+
+
+INSERT INTO SanPham (TenSP, DonGia, HinhAnh, MaLoai) VALUES
+(N'Lavie 350ml', 100000, '10ca7952-e374-4be0-803d-b667fced0d9ffile.jpg', '1'),
+( N'Lavie 1,5lít', 300000, '0acff0db-1e32-4388-abf0-444ce8272e0efile.jpg', '1'),
+( N'Lavie 500ml', 400000, '1b817082-32fc-4547-8272-25d022b5a341file.jpg', '1'),
+( N'Lavie 20lít', 500000, 'A1(125).jpg', '1'),
+( N'Evian 330ml', 100000, 'i.jpg', '2'),
+( N'Evian 500ml', 200000, 'images (6).jpg', '2'),
+(N'Evian 750ml', 300000, 'A1(125).jpg', '2'),
+( N'Evian 1lít', 400000, 'images (6).jpg', '2'),
+(N'Evian 1,5lít', 500000, '0acff0db-1e32-4388-abf0-444ce8272e0efile.jpg', '2');

@@ -1,0 +1,10 @@
+﻿@model IEnumerable<QLDaiLy.Models.LoaiSP>
+
+<div class="list-group">
+
+    <h2>LOẠI SẢN PHẨM</h2>
+    @foreach (var item in Model)
+    {
+        <a href="@Url.Action("SPtheoLoai", "Home", new { id = item.MaLoai })" class="list-group-item">@item.TenLoai</a>
+    }
+</div>

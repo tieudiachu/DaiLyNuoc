@@ -1,0 +1,30 @@
+﻿@model IEnumerable<QLDaiLy.Models.SanPham>
+@{
+    ViewBag.Title = "SPtheoLoai";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<hr />
+<div class="col-md-12 col-sm-12 col-lg-12">
+    <h2>DANH SÁCH SẢN PHẨM THEO LOẠI</h2>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @foreach (var item in Model)
+            {
+                <div class="col-sm-4 col-lg-4 col-md-4">
+                    <div class="thumbnail">
+                        <a href="@Url.Action("Details", "SanPham", new { id = item.MaSP})">
+                            <img src="~/Images/@item.HinhAnh" alt="@item.TenSP" style="height:300px;width:300px;">
+                        </a>
+                        <div class="caption">
+                            <h4 class="text-center">
+                                <a href="@Url.Action("Details", "SanPham", new { id = item.MaSP })">@item.TenSP</a>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,31 @@
+﻿@model QLDaiLy.Models.SanPham
+@{
+    ViewBag.Title = "Chi tiết sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<hr />
+<div class="panel panel-info">
+    <div class="panel-heading">CHI TIẾT SẢN PHẨM</div>
+    <div class="panel-body">
+        <div class="col-sm-4 col-md-4 col-lg-4">
+            <img src="~/Images/@Html.DisplayFor(n=>n.HinhAnh)" style="width:350px; height:300px;" />
+        </div>
+        <div class="col-sm-8 col-md-8 col-lg-8">
+            <dl>
+                <dt>
+                    Tên sản phẩm:
+                </dt>
+                <dd>@Html.DisplayFor(n => n.TenSP)</dd>
+                <dt>
+                    Giá sản phẩm:
+                </dt>
+                <dd>@Html.DisplayFor(n => n.DonGia)</dd>
+            </dl>
+        </div>
+    </div>
+    <div class="panel-footer">
+        @Html.ActionLink("Trở về danh sách sản phẩm", "Index")
+    </div>
+</div>
+

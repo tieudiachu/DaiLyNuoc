@@ -1,0 +1,65 @@
+﻿@model PagedList.IPagedList<QLDaiLy.Models.SanPham>
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Danh sách sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<hr />
+@using (Html.BeginForm("Search", "SanPham", FormMethod.Post))
+{
+    <div>
+        @Html.TextBox("searchString")
+        <button type="submit" id="btnSearch" class="btn-success">Tìm kiếm</button>
+    </div>
+}
+<br />
+
+<div class="panel panel-default">
+    <div class="panel-heading">DANH SÁCH SẢN PHẨM</div>
+    <div class="panel-body">
+        @foreach (var item in Model)
+        {
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="thumbnail">
+                    <a href="@Url.Action("Details", "SanPham", new { id = item.MaSP})">
+                        <img src="~/Images/@item.HinhAnh" alt="@item.TenSP" style="height:300px;width:300px;">
+                    </a>
+                    <div class="caption">
+                        <h4 class="text-center">
+                            <a href="@Url.Action("Details", "SanPham", new { id = item.MaSP })">@item.TenSP</a>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="panel-footer">
+        Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/@Model.PageCount
+        <div class="MenuTrang">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
+        </div>
+    </div>
+
+    <style>
+        .MenuTrang li {
+            display: inline;
+        }
+    </style>
+</div>
+<script>
+    $("#btnSearch").click(function (e) {
+        e.preventDefault();
+        var search = $("#searchString").val();
+        console.log(search);
+        $.ajax({
+            url: "/MonAns/SearchMonAn?searchString=" + search,
+            type: "Post",
+            contentType: "html",
+            success: function (response) {
+                $("#showmonan").html(response);
+            }
+        })
+    }
+    );
+</script>
